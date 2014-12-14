@@ -8,50 +8,18 @@
 # deriving production ready images from.
 #
 
-FROM ubuntu:utopic
+FROM ubuntu:14.04
 
 MAINTAINER pamtrak06 <pamtrak06@gmail.com>
 
 # Ensure the package repository is up to date
-RUN echo "deb http://fr.archive.ubuntu.com/ubuntu utopic main universe" > /etc/apt/sources.list
-#RUN echo "deb http://ppa.launchpad.net/smartlounge/ppa/ubuntu utopic main universe" >> /etc/apt/sources.list
 RUN echo "deb http://ppa.launchpad.net/kubuntu-ppa/backports/ubuntu utopic main" >> /etc/apt/sources.list
 RUN apt-get update
 
-# Install compilation prerequisites
-#RUN apt-get install -y software-properties-common python-software-properties python g++ make cmake
-
-# Install mapcache dependencies provided by Ubuntu repositories
-#RUN apt-get install -y git \
-#    libaprutil1-dev \
-#    libapr1-dev \
-#    libpng12-dev \
-#    libjpeg-dev \
-#    libcurl4-gnutls-dev \
-#    libpcre3-dev \
-#    libpixman-1-dev \
-#    libgdal-dev \
-#    libgeos-dev \
-#    libsqlite3-dev \
-#    libdb-dev \
-#    libtiff-dev
-
-# Install Mapcache itself
-#RUN git clone https://github.com/mapserver/mapcache/ /usr/local/src/mapcache
 # Setting Apache2 environment variables
 RUN source /etc/apache2/envvars
-# Erase mapcache build folder
-#RUN rm -rf /usr/local/src/mapcache/build
-# Resolve Could NOT find APACHE (missing:  APACHE_INCLUDE_DIR) / APACHE library/component could not be found and is a mandatory dependency
-#RUN sudo apt-cache search apache2|grep -i devel
+# Install Apache devel
 RUN sudo apt-get install apache2-threaded-dev
-# Compile Mapcache for Apache
-#RUN mkdir /usr/local/src/mapcache/build && \
-#    cd /usr/local/src/mapcache/build && \
-#    cmake ../ -DWITH_FCGI=0 -DWITH_APACHE=1 -DWITH_PCRE=1 -DWITH_TIFF=1 -DWITH_BERKELEY_DB=1 -DWITH_MEMCACHE=1 -DCMAKE_PREFIX_PATH="/etc/apache2" && \
-#    make && \
-#    make install
-
 # Install Apache
 RUN apt-get install -y apache2
 
@@ -68,10 +36,39 @@ RUN apt-get install -y apache2
 # Enable mapcache module
 #RUN a2enmod mapcache
 
+# ------------------------------------
+# Install python environement
+# ------------------------------------
 # Install pip
-RUN apt-get install python-pip
+RUN apt-get install python-pip < echo "Y"
+# Install setuptools
+RUN apt-get install curl < echo "Y"
+RUN curl https://bootstrap.pypa.io/ez_setup.py -o - | python
+# Install virtualenv
+RUN pip install virtualenv
+# ------------------------------------
+
+# ------------------------------------
+# Install mapproxy dependencies
+# ------------------------------------
+# Install lib proj
+RUN pip install libproj0
+# Install lib pil
+RUN pip install python-imaging
+# Install lib yaml
+RUN pip install PyYAML
+# ------------------------------------
+
+
+# ------------------------------------
+# Install mapproxy
+# ------------------------------------
+RUN pip install MapProxy
+
 # Install OGC library
 RUN pip install OWSLib
+
+
 # Set path for mapcache file
 #RUN cd /etc/apache2/conf-available/
 # Download py library to produce mapcache.xml from a wms url
