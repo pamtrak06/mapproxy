@@ -29,6 +29,7 @@ RUN cd mod_wsgi-4.4.0/
 RUN ./configure --with-apxs=/usr/bin/apxs
 RUN make
 RUN make install
+RUN cd ..; rm 4.4.0.tar.gz; rm -rf mod_wsgi-4.4.0
 # Enable wsgi module
 RUN a2enmod wsgi
 
@@ -83,6 +84,17 @@ RUN pip install MapProxy
 # Install OGC library
 RUN pip install OWSLib
 # ------------------------------------
+
+# ------------------------------------
+# Build mapproxy configuration file
+# ------------------------------------
+# Set path for mapcache file
+RUN cd /etc/apache2/conf-available/
+# Build a configuration file from wms capabilities url or file
+#RUN mapproxy-util autoconfig --capabilities http://geo.weather.gc.ca/geomet/?lang=E > geometca.yaml
+# Build python binding for Apache
+#RUN mapproxy-util create -t wsgi-app -f mapproxy.yaml geometca-config.py
+
 
 # start apache
 RUN apachectl start
