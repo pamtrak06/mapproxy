@@ -60,25 +60,29 @@ RUN echo "Y" | sudo apt-get install build-essential libjpeg-dev \
 RUN pip install Pillow
 # Install lib yaml
 RUN pip install PyYAML
+# Install geos
+RUN apt-get libgeos++-dev libgeos-3.4.2 libgeos-c1 libgeos-dbg libgeos-dev
 # Install Shapely and GEOS (optional)
 RUN pip install Shapely
 # Install gdal (optional)
-RUN pip install gdal
+RUN apt-get install python-gdal
 # Install lxml (optional)
+RUN echo "Y" | apt-get install libxml2-dev libxslt1-dev
 RUN pip install lxml
 # ------------------------------------
-
 
 # ------------------------------------
 # Install mapproxy
 # ------------------------------------
 RUN pip install MapProxy
+# ------------------------------------
 
 # ------------------------------------
 # Install third-party
 # ------------------------------------
 # Install OGC library
 RUN pip install OWSLib
+# ------------------------------------
 
 
 # Set path for mapcache file
