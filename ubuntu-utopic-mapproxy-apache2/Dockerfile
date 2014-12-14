@@ -2,10 +2,9 @@
 #
 # This creates an Ubuntu derived base image that installs a recent
 # version of Apache as well as the latest repository checkouts of
-# Mapserver Mapcache. Mapcache has a
-# broad range of compile time options enabled and as such this
-# provides a suitable base image for both experimenting with and
-# deriving production ready images from.
+# Mapproxy. Mapproxy has a  broad range of compile time options enabled 
+# and as such this provides a suitable base image for both 
+# experimenting with and # deriving production ready images from.
 #
 
 FROM ubuntu:14.04
@@ -41,6 +40,8 @@ RUN apt-get install -y apache2
 # ------------------------------------
 # Install pip
 RUN apt-get install python-pip < echo "Y"
+# Install python dev
+RUN apt-get install python-dev < echo "Y"
 # Install setuptools
 RUN apt-get install curl < echo "Y"
 RUN curl https://bootstrap.pypa.io/ez_setup.py -o - | python
@@ -52,11 +53,19 @@ RUN pip install virtualenv
 # Install mapproxy dependencies
 # ------------------------------------
 # Install lib proj
-RUN pip install libproj0
+RUN pip install pyproj
 # Install lib pil
-RUN pip install python-imaging
+RUN sudo aptitude install build-essential python-dev libjpeg-dev \
+  zlib1g-dev libfreetype6-dev
+RUN pip install Pillow
 # Install lib yaml
 RUN pip install PyYAML
+# Install Shapely and GEOS (optional)
+RUN pip install Shapely
+# Install gdal (optional)
+RUN pip install gdal
+# Install lxml (optional)
+RUN pip install lxml
 # ------------------------------------
 
 
