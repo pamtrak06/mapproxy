@@ -39,11 +39,11 @@ RUN apt-get install -y apache2
 # Install python environement
 # ------------------------------------
 # Install pip
-RUN apt-get install python-pip < echo "Y"
+RUN echo "Y" | apt-get install python-pip
 # Install python dev
-RUN apt-get install python-dev < echo "Y"
+RUN echo "Y" | apt-get install python-dev
 # Install setuptools
-RUN apt-get install curl < echo "Y"
+RUN echo "Y" | apt-get install curl
 RUN curl https://bootstrap.pypa.io/ez_setup.py -o - | python
 # Install virtualenv
 RUN pip install virtualenv
@@ -55,7 +55,7 @@ RUN pip install virtualenv
 # Install lib proj
 RUN pip install pyproj
 # Install lib pil
-RUN sudo aptitude install build-essential python-dev libjpeg-dev \
+RUN echo "Y" | sudo apt-get install build-essential libjpeg-dev \
   zlib1g-dev libfreetype6-dev
 RUN pip install Pillow
 # Install lib yaml
@@ -74,6 +74,9 @@ RUN pip install lxml
 # ------------------------------------
 RUN pip install MapProxy
 
+# ------------------------------------
+# Install third-party
+# ------------------------------------
 # Install OGC library
 RUN pip install OWSLib
 
