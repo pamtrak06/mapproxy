@@ -94,7 +94,13 @@ RUN cd /etc/apache2/conf-available/
 #RUN mapproxy-util autoconfig --capabilities http://geo.weather.gc.ca/geomet/?lang=E > geometca.yaml
 # Build python binding for Apache
 #RUN mapproxy-util create -t wsgi-app -f mapproxy.yaml geometca-config.py
-
+RUN echo "" >> /etc/apache2/mods-available/wsgi.conf
+RUN echo "WSGIScriptAlias /mapproxy /etc/apache2/conf-available/mapproxy/geometca-config.py" >> /etc/apache2/mods-available/wsgi.conf
+RUN echo "" >> /etc/apache2/mods-available/wsgi.conf
+RUN echo "<Directory /etc/apache2/conf-available/>" >> /etc/apache2/mods-available/wsgi.conf
+RUN echo "  Order deny,allow" >> /etc/apache2/mods-available/wsgi.conf
+RUN echo "  Allow from all" >> /etc/apache2/mods-available/wsgi.conf
+RUN echo "</Directory>" >> /etc/apache2/mods-available/wsgi.conf
 
 # start apache
 RUN apachectl start
